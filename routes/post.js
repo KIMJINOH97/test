@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
 const multer = require('multer');
+const fs = require('fs');
+
 const { Post, Hashtag, User } = require('../models');
 const { isLoggendIn, isLoggedIn } = require('./middlewares');
 const router = express.Router();
@@ -8,6 +10,13 @@ const router = express.Router();
 // 이미지 업로드시 폼을 multipart/form-data로, 그리고 이것을 해석하려면 multer가 필요함.
 // 왜냐 express.json 과 express.urlencoded가 해석을 못함 그래서 multer필요
 // enctype = "multipart/form-data"
+
+try {
+    fs.readdirSync('uploads');
+} catch (error) {
+    console.error('uploads 폴더가 없어 uploads 폴더를 생성합니다.');
+    fs.mkdirSync('uploads');
+}
 
 const upload = multer({
     storage: multer.diskStorage({

@@ -5,6 +5,7 @@ const path = require('path');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
+const nunjucks = require('nunjucks');
 const helmet = require('helmet'); // 보안을 위함
 const hpp = require('hpp'); // 보안을 위함.
 const logger = require('./logger');
@@ -24,8 +25,11 @@ const app = express();
 sequelize.sync();
 passportConfig(passport); // passport가 돌아가기 시작
 
-app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'html');
+nunjucks.configure('views', {
+    express: app,
+    watch: true,
+});
 app.set('port', process.env.PORT || 8001);
 
 if (process.env.NODE_ENV === 'production') {

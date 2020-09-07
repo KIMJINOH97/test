@@ -3,6 +3,14 @@ const router = express.Router();
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const { Post, User } = require('../models');
 
+router.use((req, res, next) => {
+    res.locals.user = req.user;
+    res.locals.followerCount = req.user ? req.user.Followers.length : 0;
+    res.locals.followingCount = req.user ? req.user.Followings.length : 0;
+    res.locals.followerIdList = req.user ? req.user.Followings.map((f) => f.id) : [];
+    next();
+});
+
 // 프로필 페이지
 router.get('/profile', isLoggedIn, async (req, res, next) => {
     // 로그인 한 사람만 들어옴
